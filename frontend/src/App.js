@@ -4,6 +4,8 @@ import {
   Switch,
   Route,
 } from "react-router-dom";
+import { ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
 import Nav from './components/Navigation/Nav';
 import Login from './components/Login/Login';
@@ -39,6 +41,18 @@ function App() {
           </Route>
         </Switch> 
       </div>
+
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </Router>
   );
 }
