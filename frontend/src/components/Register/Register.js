@@ -21,23 +21,23 @@ const Register = () => {
                     <div className="login-right border border-dark p-3 rounded-3">
                         <form>
                             <div className="mb-3">
-                                <label for="inputEmail" class="form-label">Email address:</label>
+                                <label for="inputEmail" className="form-label">Email address:</label>
                                 <input type="email" className="form-control" id="inputEmail" placeholder="Email address" />
                             </div>
                             <div className="mb-3">
-                                <label for="inputPhoneNumber" class="form-label">Phone Number:</label>
+                                <label for="inputPhoneNumber" className="form-label">Phone Number:</label>
                                 <input type="text" className="form-control" id="inputPhoneNumber" placeholder="Phone" />
                             </div>
                             <div className="mb-3">
-                                <label for="inputUserName" class="form-label">User Name:</label>
+                                <label for="inputUserName" className="form-label">User Name:</label>
                                 <input type="text" className="form-control" id="inputUserName" placeholder="User Name" />
                             </div>
                             <div className="mb-3">
-                                <label for="inputPassword" class="form-label">Password:</label>
+                                <label for="inputPassword" className="form-label">Password:</label>
                                 <input type="password" className="form-control" id="inputPassword" placeholder="Password" />
                             </div>
                             <div className="mb-3">
-                                <label for="inputReEnterPassword" class="form-label">Re-enter Password:</label>
+                                <label for="inputReEnterPassword" className="form-label">Re-enter Password:</label>
                                 <input type="password" className="form-control" id="inputReEnterPassword" placeholder="Re-enter Password" />
                             </div>
                             <div className="mb-3">
