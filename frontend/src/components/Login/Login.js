@@ -1,16 +1,7 @@
 import { Link, useHistory } from "react-router-dom";
-import axios from "axios";
-import { useEffect } from "react";
 
 const Login = () => {
     let history = useHistory();
-
-    // useEffect(() => {
-        // axios.get('http://localhost:8000/api/test-api')
-        //     .then(data => {
-        //         console.log(">>>check data api:", data);
-        //     })
-    // }, []);
 
     const handleCreateNewAccout = () => {
         history.push('/register');

@@ -1,13 +1,22 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
+import { registerNewUser } from "../../services/userService";
 
 const Register = () => {
     let [email, setEmail] = useState("");
-    let [phoneNumber, setPhoneNumber] = useState("");
+    let [phone, setPhone] = useState("");
     let [userName, setUserName] = useState("");
     let [password, setPassword] = useState("");
     let [confirmPassword, setConfirmPassword] = useState("");
+    let defaulValidInput = {
+        isValidEmail: true,
+        isValidPhoneNumber: true,
+        isValidUserName: true,
+        isValidPassword: true,
+        isValidConfirmPassword: true,
+    }
+    let [objCheckInput, setObjCheckInput] = useState(defaulValidInput); 
 
     let history = useHistory();
 
@@ -18,25 +27,31 @@ const Register = () => {
     const isValidInputs = () => {
         let regx = /\S+@\S+\.\S+/;
 
+        setObjCheckInput(defaulValidInput);
+
         if(!email) {
             toast.error("Email is required");
+            setObjCheckInput({...defaulValidInput, isValidEmail: false});
             return false;
         }
-        if(!phoneNumber) {
+        if(!phone) {
             toast.error("Phone number is required");
+            setObjCheckInput({...defaulValidInput, isValidPhoneNumber: false});
             return false;
         }
         if(!userName) {
             toast.error("User name is required");
+            setObjCheckInput({...defaulValidInput, isValidUserName: false});
             return false;
         }
         if(!password) {
             toast.error("Password is required");
+            setObjCheckInput({...defaulValidInput, isValidPassword: false});
             return false;
         }
-
-        if(password != confirmPassword) {
+        if(password !== confirmPassword) {
             toast.error("Your password is not the same");
+            setObjCheckInput({...defaulValidInput, isValidConfirmPassword: false});
             return false;
         }
         
@@ -48,12 +63,20 @@ const Register = () => {
         return true;
     }
     
-    const handleRegister = () => {
+    const handleRegister = async () => {
         let check = isValidInputs();
 
-        let formData = {email, phoneNumber, userName, password, confirmPassword};
+        if(check === true) {
+            let response = await registerNewUser(email, phone, userName, password);
+            let serverData = response.data;
 
-        console.log('>>check form data', formData);
+            if (+serverData.EC === 0) {
+                toast.success(serverData.EM);
+                history.push('/login');
+            } else {
+                toast.error(serverData.EM);
+            }
+        }
     }
 
     return(
@@ -72,7 +95,7 @@ const Register = () => {
                             <label htmlFor="inputEmail" className="form-label">Email address:</label>
                             <input 
                                 type="email" 
-                                className="form-control" 
+                                className={objCheckInput.isValidEmail ? "form-control" : "form-control is-invalid"} 
                                 id="inputEmail" 
                                 placeholder="Email address" 
                                 value={email}
@@ -83,18 +106,18 @@ const Register = () => {
                             <label htmlFor="inputPhoneNumber" className="form-label">Phone Number:</label>
                             <input 
                                 type="text" 
-                                className="form-control" 
+                                className={objCheckInput.isValidPhoneNumber ? "form-control" : "form-control is-invalid"} 
                                 id="inputPhoneNumber" 
                                 placeholder="Phone" 
-                                value={phoneNumber}
-                                onChange={(e) => setPhoneNumber(e.target.value)}
+                                value={phone}
+                                onChange={(e) => setPhone(e.target.value)}
                             />
                         </div>
                         <div className="mb-3">
                             <label htmlFor="inputUserName" className="form-label">User Name:</label>
                             <input 
                                 type="text" 
-                                className="form-control" 
+                                className={objCheckInput.isValidUserName ? "form-control" : "form-control is-invalid"} 
                                 id="inputUserName" 
                                 placeholder="User Name" 
                                 value={userName}
@@ -105,7 +128,7 @@ const Register = () => {
                             <label htmlFor="inputPassword" className="form-label">Password:</label>
                             <input 
                                 type="password" 
-                                className="form-control" 
+                                className={objCheckInput.isValidPassword ? "form-control" : "form-control is-invalid"} 
                                 id="inputPassword" 
                                 placeholder="Password" 
                                 value={password}
@@ -116,7 +139,7 @@ const Register = () => {
                             <label htmlFor="inputConfirmPassword" className="form-label">Re-enter Password:</label>
                             <input 
                                 type="password" 
-                                className="form-control" 
+                                className={objCheckInput.isValidConfirmPassword ? "form-control" : "form-control is-invalid"} 
                                 id="inputConfirmPassword" 
                                 placeholder="Re-enter Password" 
                                 value={confirmPassword}
