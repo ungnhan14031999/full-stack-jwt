@@ -1,5 +1,6 @@
-import bcrypt from 'bcrypt';
 import db from '../models/index';
+import bcrypt from 'bcrypt';
+
 
 const salt = bcrypt.genSaltSync(10);
 
@@ -8,96 +9,70 @@ const hashUserPassword = (userPassword) => {
     return hashPassword;
 }
 
-const creteNewUser = async (email, password, userName) => {
-    let hashPassword = hashUserPassword(password);
-
-    try {
-        await db.User.create({ email, userName, password: hashPassword });
-    } catch (error) {
-        console.log(error);
+const checkEmailExist = async (email) => {
+    let user = await db.User.findOne({
+        where: { email }
+    });
+    
+    if(user) {
+        return true;
     }
+
+    return false;
 }
 
-const getUserList = async () => {
-    
-    // test relationships
-    let newUser = await db.User.findOne({
-        where: { id: 1 },
-        attributes: ['id', 'userName', 'email'],
-        include: { 
-            model: db.Group, 
-            attributes: ['id', 'name', 'description'], 
-        },
-        raw: true,
-        nest: true
+const checkPhoneNumberExist = async (phone) => {
+    let user = await db.User.findOne({
+        where: { phone }
     });
 
-    // let roles = await db.Group.findOne({
-    //     where: { id: 1 },
-    //     include: {model: db.Role},
-    //     raw: true,
-    //     nest: true
-    // });
-
-    // let checkRole = await db.Role.findAll({
-    //     include: {
-    //         model: db.Group, 
-    //         where: { id : 1 }
-    //     },
-    //     raw: true,
-    //     nest: true
-    // });
-
-    console.log(">>>check new users:", newUser);
-    // console.log(">>>check new roles:", checkRole);
-
-
-
-    try {
-        let userList = [];
-        userList = await db.User.findAll();
-
-        return userList;
-    } catch (error) {
-        console.log(error);
+    if(user) {
+        return true;
     }
+
+    return false;
 }
 
-const deleteUser = async (id) => {
-    try {
-        await db.User.destroy({
-            where: { id }
-        });
-    } catch (error) {
-        console.log(error);
+const registerNewUser = async (rawUserData) => {
+    let {email, phone, password} = rawUserData;
+    
+    let isEmailExist = await checkEmailExist(email);
+    if (isEmailExist === true) {
+        return {
+            EM: "The email is already exist",
+            EC: 1
+        }
     }
-}
 
-const getUserById = async (id) => {
+    let isPhoneNumberExist = await checkPhoneNumberExist(phone);
+    if (isPhoneNumberExist === true) {
+        return {
+            EM: "The phone number is already exist",
+            EC: 1
+        }
+    }
+
+    let hasPassword = hashUserPassword(password);
+
     try {
-        let user = {};
-        user = await db.User.findOne({
-            where: { id },
-            // raw: true,
+        await db.User.create({
+            ...rawUserData,
+            password: hasPassword
         });
 
-        return user;
+        return {
+            EM: "Created user successfully",
+            EC: 0
+        }
     } catch (error) {
         console.log(error);
-    }
-}
-
-const updateUserInfo = async (id, email, userName) => {
-    try {
-        await db.User.update(
-            { email, userName }, 
-            { where: {id} }
-        );
-    } catch (error) {
-        console.log(error);
+        return {
+            EM: "Someting wrong in service",
+            EC: -2
+        }
     }
 }
 
 module.exports = {
-    creteNewUser, getUserList, deleteUser, getUserById, updateUserInfo
+    registerNewUser
 }

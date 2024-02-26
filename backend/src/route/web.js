@@ -12,8 +12,6 @@ let initWebRoutes = (app) => {
   router.get("/update-user/:id", homeControler.handleUpdateUserPage);
   router.post("/user/update-user", homeControler.handleUpdateUser);
 
-  router.get("/api/test-api", apiController.testApi);
-
   return app.use("/", router);
 };
 
