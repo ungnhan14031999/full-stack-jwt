@@ -48,7 +48,7 @@ const registerNewUser = async (rawUserData) => {
     if (isPhoneNumberExist === true) {
         return {
             EM: "The phone number is already exist",
-            EC: 1
+            EC: 2
         }
     }
 

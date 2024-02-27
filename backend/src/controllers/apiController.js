@@ -15,7 +15,7 @@ const handleRegister = async (req, res) => {
         if(password && password.length < 6) {
             return res.status(200).json({
                 EM: 'Your password must have more than 6 letters',
-                EC: -1,
+                EC: -2,
                 DT: ''
             });
         }

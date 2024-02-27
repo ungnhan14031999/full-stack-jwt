@@ -17,6 +17,7 @@ const Register = () => {
         isValidConfirmPassword: true,
     }
     let [objCheckInput, setObjCheckInput] = useState(defaulValidInput); 
+    
 
     let history = useHistory();
 
@@ -62,6 +63,27 @@ const Register = () => {
 
         return true;
     }
+
+    const isValidServer = (serverData) => {
+        console.log(">>>Check err code server:" ,serverData);
+
+        if (+serverData.EC === 0) {
+            toast.success(serverData.EM);
+            history.push('/login');
+        } else if(+serverData.EC === 1) {
+            setObjCheckInput({...defaulValidInput, isValidEmail: false});
+            toast.error(serverData.EM);
+        } else if(+serverData.EC === 2) {
+            setObjCheckInput({...defaulValidInput, isValidPhoneNumber: false});
+            toast.error(serverData.EM);
+        }else if(+serverData.EC === -2) {
+            setObjCheckInput({...defaulValidInput, isValidPassword: false});
+            setObjCheckInput({...defaulValidInput, isValidConfirmPassword: false});
+            toast.error(serverData.EM);
+        } else {
+            toast.error(serverData.EM);
+        }
+    }
     
     const handleRegister = async () => {
         let check = isValidInputs();
@@ -69,13 +91,8 @@ const Register = () => {
         if(check === true) {
             let response = await registerNewUser(email, phone, userName, password);
             let serverData = response.data;
-
-            if (+serverData.EC === 0) {
-                toast.success(serverData.EM);
-                history.push('/login');
-            } else {
-                toast.error(serverData.EM);
-            }
+            
+            isValidServer(serverData);
         }
     }
 
