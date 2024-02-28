@@ -1,10 +1,40 @@
+import { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
+import { toast } from "react-toastify";
+import {loginUser} from "../../services/userService";
 
 const Login = () => {
+    const [valueLogin, setValueLogin] = useState("");
+    const [password, setPassword] = useState("");
+    const defaultObjValidInput = {
+        isValidValueLogin: true,
+        isValidValuePassword: true
+    }
+    const [objValidInput, setObjValidInput] = useState(defaultObjValidInput);
+
+    
+    
     let history = useHistory();
 
     const handleCreateNewAccout = () => {
         history.push('/register');
+    }
+
+    const handleLogin = async () => {
+        setObjValidInput(defaultObjValidInput);
+
+        if(!valueLogin) {
+            setObjValidInput({...defaultObjValidInput, isValidValueLogin: false});
+            toast.error("Please enter your email or phone number");
+            return ;
+        }
+        if(!password) {
+            setObjValidInput({...defaultObjValidInput, isValidValuePassword: false});
+            toast.error("Please enter your password");
+            return;
+        }
+
+        await loginUser(valueLogin, password);
     }
 
     return(
@@ -19,23 +49,39 @@ const Login = () => {
 
                 <div className="col-md-6 col-12">
                     <div className="login-right border border-dark p-3 rounded-3">
-                        <form>
-                            <div className="mb-3">
-                                <input type="email" className="form-control" id="inputEmail" placeholder="Email address" />
-                            </div>
-                            <div className="mb-3">
-                                <input type="password" className="form-control" id="inputPassword" placeholder="Password" />
-                            </div>
-                            <div className="mb-3">
-                                <button type="submit" className="btn btn-primary w-100">Login</button>
-                            </div>
-                            <div className="mb-3 text-center">
-                                <Link to="/forgot-password" className="text-uppercase">Forgot your password?</Link>
-                            </div>
-                            <div className="mb-3">
-                                <button onClick={() => handleCreateNewAccout()}  type="submit" className="btn btn-light w-100 btn-outline-secondary">Create new accout</button>
-                            </div>
-                        </form>
+                        <div className="mb-3">
+                            <input 
+                                type="email" 
+                                className={objValidInput.isValidValueLogin ? "form-control" : "form-control is-invalid"} 
+                                id="inputEmail" 
+                                placeholder="Email address or phone number" 
+                                value={valueLogin}
+                                onChange={(e) => {setValueLogin(e.target.value)}}
+                            />
+                        </div>
+                        <div className="mb-3">
+                            <input 
+                                type="password" 
+                                className={objValidInput.isValidValuePassword ? "form-control" : "form-control is-invalid"}  
+                                id="inputPassword" 
+                                placeholder="Password" 
+                                value={password}
+                                onChange={(e) => {setPassword(e.target.value)}}
+                            />
+                        </div>
+                        <div className="mb-3">
+                            <button 
+                                type="submit" 
+                                className="btn btn-primary w-100"
+                                onClick={() => handleLogin()}
+                            >Login</button>
+                        </div>
+                        <div className="mb-3 text-center">
+                            <Link to="/forgot-password" className="text-uppercase">Forgot your password?</Link>
+                        </div>
+                        <div className="mb-3">
+                            <button onClick={() => handleCreateNewAccout()}  type="submit" className="btn btn-light w-100 btn-outline-secondary">Create new accout</button>
+                        </div>
                     </div>
                 </div>
             </div>
