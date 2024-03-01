@@ -34,7 +34,21 @@ const Login = () => {
             return;
         }
 
-        await loginUser(valueLogin, password);
+        let response = await loginUser(valueLogin, password);
+
+        if(response && response.data && response.data.EC === 0) {
+            toast.success(response.data.EM);
+
+            let data = {
+                isAuthenticated: true,
+                token: "fake token"
+            }
+            sessionStorage.setItem('account', JSON.stringify(data));
+            
+            history.push('/users');
+        } else {
+            toast.error(response.data.EM);
+        }
     }
 
     return(
