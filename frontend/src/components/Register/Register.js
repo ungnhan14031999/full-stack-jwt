@@ -65,8 +65,6 @@ const Register = () => {
     }
 
     const isValidServer = (serverData) => {
-        console.log(">>>Check err code server:" ,serverData);
-
         if (+serverData.EC === 0) {
             toast.success(serverData.EM);
             history.push('/login');

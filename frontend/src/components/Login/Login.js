@@ -12,8 +12,6 @@ const Login = () => {
     }
     const [objValidInput, setObjValidInput] = useState(defaultObjValidInput);
 
-    
-    
     let history = useHistory();
 
     const handleCreateNewAccout = () => {
@@ -21,7 +19,7 @@ const Login = () => {
     }
 
     const handleLogin = async () => {
-        setObjValidInput(defaultObjValidInput);
+        setObjValidInput(defaultObjValidInput)
 
         if(!valueLogin) {
             setObjValidInput({...defaultObjValidInput, isValidValueLogin: false});
@@ -46,8 +44,18 @@ const Login = () => {
             sessionStorage.setItem('account', JSON.stringify(data));
             
             history.push('/users');
+
+            window.location.reload();
         } else {
             toast.error(response.data.EM);
+        }
+    }
+
+    const handlePressEnter = (e) => {
+        console.log(e);
+
+        if(e.charCode === 13 && e.code === "Enter") {
+            handleLogin();
         }
     }
 
@@ -81,6 +89,7 @@ const Login = () => {
                                 placeholder="Password" 
                                 value={password}
                                 onChange={(e) => {setPassword(e.target.value)}}
+                                onKeyPress={(e) => handlePressEnter(e)}
                             />
                         </div>
                         <div className="mb-3">
