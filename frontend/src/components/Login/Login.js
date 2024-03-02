@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
 import {loginUser} from "../../services/userService";
@@ -44,7 +44,6 @@ const Login = () => {
             sessionStorage.setItem('account', JSON.stringify(data));
             
             history.push('/users');
-
             window.location.reload();
         } else {
             toast.error(response.data.EM);
@@ -52,15 +51,21 @@ const Login = () => {
     }
 
     const handlePressEnter = (e) => {
-        console.log(e);
-
-        if(e.charCode === 13 && e.code === "Enter") {
+        if(e.charCode === 13 && e.code === "Enter" || e.code === "NumpadEnter") {
             handleLogin();
         }
     }
 
+    useEffect(() => {
+        let sessionAccount = sessionStorage.getItem('account');
+        if(sessionAccount) {
+            history.push('/');
+            window.location.reload();
+        }
+    }, []);
+
     return(
-        <div className="login-container container">
+        <div className="section-login container">
             <div className="row my-5">
                 <div className="col-md-6 col-12 d-flex justify-content-center align-items-center">
                     <div className="login-left text-center text-md-start">

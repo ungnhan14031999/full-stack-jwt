@@ -95,7 +95,7 @@ const Register = () => {
     }
 
     return(
-        <div className="login-container container">
+        <div className="section-register container">
             <div className="row my-5">
                 <div className="col-md-6 col-12 d-flex justify-content-center align-items-center">
                     <div className="login-left text-center text-md-start">

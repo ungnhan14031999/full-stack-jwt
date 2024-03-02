@@ -1,16 +1,31 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './Nav.scss';
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
 const Nav = () => {
+    const [isShow, setIsShow] = useState(true);
+
+    let location = useLocation();
+
+    useEffect(() => {
+        let sessionAccount = sessionStorage.getItem('account');
+        if(location.pathname === '/login' || !sessionAccount) {
+            setIsShow(false);
+        }
+    }, []);
+
     return (
-        <div className="topnav">
-            <NavLink to="home" exact>Home</NavLink>
-            <NavLink to="news">News</NavLink>
-            <NavLink to="contact">Contact</NavLink>
-            <NavLink to="about">About</NavLink>
-            <NavLink to="users">Users</NavLink>
-        </div>
+        <>
+            {
+                isShow && 
+                    <div className="section-nav topnav">
+                        <NavLink to="home" exact>Home</NavLink>
+                        <NavLink to="users">Users</NavLink>
+                        <NavLink to="projects">Projects</NavLink>
+                    </div>
+            }
+            
+        </>
     );
 };
 
