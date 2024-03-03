@@ -7,6 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Nav from './components/Navigation/Nav';
 import AppRoutes from './routes/AppRoutes';
 
+require('dotenv').config();
 
 function App() {
   const [account, setAccount] = useState('');
