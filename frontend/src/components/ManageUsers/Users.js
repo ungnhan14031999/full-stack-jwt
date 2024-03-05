@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import {fetchAllUser, deleteUser} from '../../services/userService';
 
 import ModalDelete from './ModalDelete';
+import ModalUser from './ModalUser';
 
 const Users = (props) => {
     const [listUsers, setListUsers] = useState([]);
@@ -11,6 +12,7 @@ const Users = (props) => {
     const [currentLimit, setCurrentLimit] = useState(5);
     const [totalPages, setTotalPages] = useState(0);
     const [isShowModalDelete, setIsShowModalDelete] = useState(false);
+    const [isShowModalUser, setIsShowModalUser] = useState(false);
     const [dataModal, setDataModal] = useState({});
 
     useEffect(() => {
@@ -53,6 +55,10 @@ const Users = (props) => {
         }
     }
 
+    const onHideModalUser = () => {
+        setIsShowModalUser(false);
+    }
+
     return (
         <>
             <div className='section-users mt-3'>
@@ -61,7 +67,12 @@ const Users = (props) => {
                         <h3 className='users-header__title'>Table Users</h3>
                         <div className='users-header__action mb-2'>
                             <button className='action-refesh btn btn-success'>Refesh</button>
-                            <button className='action-add btn btn-primary ms-2'>Add new user</button>
+                            <button 
+                                className='action-add btn btn-primary ms-2'
+                                onClick={() => {setIsShowModalUser(true)}}
+                            >
+                                Add new user
+                            </button>
                         </div>
                     </div>
 
@@ -149,6 +160,12 @@ const Users = (props) => {
                 handleClose={handleClose}
                 confirmDeleteUser={confirmDeleteUser}
                 dataModal={dataModal}
+            />
+
+            <ModalUser
+                title={'Create new user'}
+                onHide={onHideModalUser}
+                show={isShowModalUser}
             />
         </>
     );

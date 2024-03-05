@@ -33,9 +33,24 @@ const readFunc = async (req, res) => {
     }
 }
 
-const createFunc = (req, res) => {
+const createFunc = async (req, res) => {
     try {
-        
+        let {email, phone, password, group} = req.body;
+        if (!email || !phone || !password || !group) {
+            return res.status(200).json({
+                EM: 'Missing required parameters',
+                EC: -2,
+                DT: '',
+            });
+        } else {
+            let data = await userApiService.createNewUser(req.body);
+
+            return res.status(200).json({
+                EM: data.EM,
+                EC: data.EC,
+                DT: data.DT
+            });
+        }
     } catch (error) {
         console.log(">>> Error:", error);
 
