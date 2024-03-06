@@ -25,7 +25,6 @@ const fetchGroup = () => {
 }
 
 const createNewUser = (userData) => {
-    console.log(">>>check userData", userData);
     return axios.post('http://localhost:8000/api/v1/user/create', {...userData});
 }
 

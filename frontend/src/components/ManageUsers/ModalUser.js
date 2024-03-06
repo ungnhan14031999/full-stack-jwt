@@ -42,7 +42,7 @@ const ModalUser = (props) => {
 
             if (res.data.DT && res.data.DT.length > 0) {
                 let group = res.data.DT;
-                setUserData({...userData, group});
+                setUserData({...userData, group: group[0].id});
             }
         } else {
             toast.error(res.data.EM)
@@ -59,20 +59,30 @@ const ModalUser = (props) => {
     const checkValidInputs = () => {
         let arr = ['email', 'phone', 'password', 'group'];
         let check = true;
+        let regx = /\S+@\S+\.\S+/;
 
         setValidInputs(validInputsDefault);
 
+        let _validInputs = _.cloneDeep(validInputsDefault);
+
         for (let i = 0; i < arr.length; i++) {
             if (!userData[arr[i]]) {
-                let _validInputs = _.cloneDeep(validInputsDefault);
                 _validInputs[arr[i]] = false;
-
                 setValidInputs(_validInputs);
-                toast.error(`Emty input ${arr[i]}`);
 
+                toast.error(`Emty input ${arr[i]}`);
                 check = false;
                 break;
             }
+        }
+
+        //Check valid email
+        if(!regx.test(userData['email'])) {
+            _validInputs['email'] = false;
+            setValidInputs(_validInputs);
+
+            toast.error("Please enter a valid email address");
+            check = false;
         }
 
         return check;
@@ -80,15 +90,15 @@ const ModalUser = (props) => {
 
     const handleConfirmUser = async () => {
         let check = checkValidInputs();
+
         if(check === true) {
             let res = await createNewUser({...userData, groupId: userData["group"]});
-
             if(res.data && res.data.EC === 0) {
-                toast.success(res.data.EM);
-            
+                setUserData({...defaultUserData, group: userGroup[0].id});
+                
                 props.onHide();
-            
-                setUserData({...defaultUserData, group: userData[0].id})
+                toast.success(res.data.EM);
+                window.location.reload();
             } else {
                 toast.error(res.data.EM);
             }
@@ -187,7 +197,7 @@ const ModalUser = (props) => {
                                         'form-control is-invalid'
                                     }
                                     onChange={(event) => handleOnchangeInput(event.target.value, 'group')}
-                                >   
+                                >
                                     { userGroup.length > 0 && 
                                         userGroup.map((item, index) => {
                                             return (
