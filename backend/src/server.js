@@ -1,7 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
 import viewEngine from "./config/viewEngine";
-import initWebRoutes from "./route/web";
 import initApiRoutes from "./route/api";
 import configCors from "./config/cors";
 import connectDB from './config/connectDB';
@@ -20,7 +19,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 //init route
 viewEngine(app);
-initWebRoutes(app);
 initApiRoutes(app);
 
 let port = process.env.PORT || 8080;

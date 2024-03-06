@@ -1,14 +1,14 @@
 import db from '../models/index';
 import bcrypt from 'bcrypt';
 import { Op } from 'sequelize';
+import hashUserPassword from './hashUserPassword';
 
+// const salt = bcrypt.genSaltSync(10);
 
-const salt = bcrypt.genSaltSync(10);
-
-const hashUserPassword = (userPassword) => {
-    let hashPassword = bcrypt.hashSync(userPassword, salt);
-    return hashPassword;
-}
+// const hashUserPassword = (userPassword) => {
+//     let hashPassword = bcrypt.hashSync(userPassword, salt);
+//     return hashPassword;
+// }
 
 const checkEmailExist = async (email) => {
     let user = await db.User.findOne({

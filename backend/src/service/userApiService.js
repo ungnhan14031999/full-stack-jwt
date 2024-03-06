@@ -1,4 +1,5 @@
 import db from '../models/index';
+import hashUserPassword from './hashUserPassword';
 
 const getAllUser = async () => {
     try {
@@ -72,7 +73,9 @@ const getUserWithPagination = async (page, limit) => {
 
 const createNewUser = async (data) => {
     try {
-        await db.User.create(data);
+        let hashPassword = hashUserPassword(data.password);
+
+        await db.User.create({...data, password: hashPassword});
 
         return {
             EM: "Create new user success",
