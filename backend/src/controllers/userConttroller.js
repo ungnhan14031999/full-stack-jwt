@@ -1,5 +1,59 @@
 import userApiService from "../service/userApiService";
 
+const handleRegister = async (req, res) => {
+    try {
+        let {email, phone, userName, password} = req.body;
+
+        if(!email || !phone || !userName || !password) {
+            return res.status(200).json({
+                EM: 'Missing required parameters',
+                EC: -1,
+                DT: ''
+            });
+        }
+
+        if(password && password.length < 6) {
+            return res.status(200).json({
+                EM: 'Your password must have more than 6 letters',
+                EC: -2,
+                DT: ''
+            });
+        }
+
+        let data = await userApiService.registerNewUser(req.body);
+
+        return res.status(200).json({
+            EM: data.EM,
+            EC: data.EC,
+            DT: ''
+        });
+    } catch (error) {
+        return res.status(500).json({
+            EM: 'error from server',
+            EC: -1,
+            DT: ''
+        });
+    }
+}
+
+const handleLogin = async (req, res) => {
+    try {
+        let data = await userApiService.handleUserLogin(req.body);
+
+        return res.status(200).json({
+            EM: data.EM,
+            EC: data.EC,
+            DT: data.DT
+        });
+    } catch (error) {
+        return res.status(500).json({
+            EM: "Error from server",
+            EC: -1,
+            DT: ''
+        });
+    }
+}   
+
 const readFunc = async (req, res) => {
     try {
         if(req.query.page && req.query.limit) {
@@ -97,5 +151,6 @@ const deleteFunc = async (req, res) => {
 }
 
 module.exports = {
+    handleRegister, handleLogin,
     readFunc, createFunc, updateFunc, deleteFunc
 }

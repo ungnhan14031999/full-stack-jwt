@@ -1,5 +1,4 @@
 import express from "express";
-import apiController from "../controllers/apiController";
 import userController from "../controllers/userConttroller";
 import groupController from "../controllers/groupController";
 
@@ -7,8 +6,8 @@ import groupController from "../controllers/groupController";
 let router = express.Router();
 
 let initApiRoutes = (app) => {
-    router.post("/register", apiController.handleRegister);
-    router.post("/login", apiController.handleLogin);
+    router.post("/register", userController.handleRegister);
+    router.post("/login", userController.handleLogin);
 
     router.get("/user/read", userController.readFunc);
     router.post("/user/create", userController.createFunc);
