@@ -98,7 +98,7 @@ const createFunc = async (req, res) => {
             });
         } else {
             let data = await userApiService.createNewUser(req.body);
-
+            
             return res.status(200).json({
                 EM: data.EM,
                 EC: data.EC,
@@ -116,9 +116,24 @@ const createFunc = async (req, res) => {
     }
 }
 
-const updateFunc = (req, res) => {
+const updateFunc = async (req, res) => {
     try {
-        
+        let {email, phone, password, group} = req.body;
+        if (!email || !phone || !password || !group) {
+            return res.status(200).json({
+                EM: 'Missing required parameters',
+                EC: -2,
+                DT: '',
+            });
+        } else {
+            let data = await userApiService.updateUser(req.body);
+            
+            return res.status(200).json({
+                EM: data.EM,
+                EC: data.EC,
+                DT: data.DT
+            });
+        }
     } catch (error) {
         console.log(">>> Error:", error);
 

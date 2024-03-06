@@ -8,10 +8,11 @@ const checkEmailExist = async (email) => {
     });
     
     if(user) {
-        return true;
+        return {
+            EM: "The email is already exist",
+            EC: 1
+        };
     }
-
-    return false;
 }
 
 const checkPhoneNumberExist = async (phone) => {
@@ -20,28 +21,29 @@ const checkPhoneNumberExist = async (phone) => {
     });
 
     if(user) {
-        return true;
+        return {
+            EM: "The phone number is already exist",
+            EC: 2
+        };
     }
-
-    return false;
 }
 
 const registerNewUser = async (rawUserData) => {
     let {email, phone, password} = rawUserData;
-    
-    let isEmailExist = await checkEmailExist(email);
-    if (isEmailExist === true) {
-        return {
-            EM: "The email is already exist",
-            EC: 1
-        }
-    }
 
     let isPhoneNumberExist = await checkPhoneNumberExist(phone);
-    if (isPhoneNumberExist === true) {
+    let isEmailExist = await checkEmailExist(email);
+
+    if (isEmailExist) {
         return {
-            EM: "The phone number is already exist",
-            EC: 2
+            EM: isEmailExist.EM,
+            EC: isEmailExist.EC
+        }
+    }
+    if (isPhoneNumberExist) {
+        return {
+            EM: isPhoneNumberExist.EM,
+            EC: isPhoneNumberExist.EC
         }
     }
 
@@ -142,15 +144,15 @@ const getUserWithPagination = async (page, limit) => {
         const { count, rows } = await db.User.findAndCountAll({
             offset, 
             limit,
-            attributes: ['id', 'userName', 'email', 'phone', 'sex'],
+            attributes: ['id', 'userName', 'email', 'phone', 'sex', 'address'],
             include: { 
                 model: db.Group, 
-                attributes: ['name', 'description'], 
+                attributes: ['name', 'description', 'id'], 
             },
+            order: [['id', 'DESC']]
         });
 
         let totalPage = Math.ceil(count / limit);
-
         let data = {
             totalRows: count,
             totalPages: totalPage,
@@ -173,8 +175,24 @@ const getUserWithPagination = async (page, limit) => {
 }
 
 const createNewUser = async (data) => {
+    let isEmailExist = await checkEmailExist(data.email);
+    let isPhoneNumberExist = await checkPhoneNumberExist(data.phone);
+    
+    if (isEmailExist) {
+        return {
+            EM: isEmailExist.EM,
+            EC: isEmailExist.EC
+        }
+    }
+    if (isPhoneNumberExist) {
+        return {
+            EM: isPhoneNumberExist.EM,
+            EC: isPhoneNumberExist.EC
+        }
+    }
+
     try {
-        let hashPassword = hashUserPassword(data.password);
+        let hashPassword = hashUserPassword.hashUserPassword(data.password);
 
         await db.User.create({...data, password: hashPassword});
 
