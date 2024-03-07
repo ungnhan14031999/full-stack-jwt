@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 import { toast } from "react-toastify";
 import _ from 'lodash';
 
-import {fetchGroup, createNewUser} from '../../services/userService';
+import {fetchGroup, createNewUser, updateCurrentUser} from '../../services/userService';
 
 const ModalUser = (props) => {
     const {action, dataModalUser, onHide, show} = props;
@@ -52,7 +52,6 @@ const ModalUser = (props) => {
                 setUserData({...userData, group: userGroup[0].id});
             }
         }
-
     }, [action]);
 
     const getGroup = async () => {
@@ -77,14 +76,16 @@ const ModalUser = (props) => {
     }
 
     const checkValidInputs = () => {
+        if(action === "UPDATE") return true;
+
         let arr = ['email', 'phone', 'password', 'group'];
         let check = true;
         let regx = /\S+@\S+\.\S+/;
 
-        setValidInputs(validInputsDefault);
-
         let _validInputs = _.cloneDeep(validInputsDefault);
 
+        setValidInputs(validInputsDefault);
+        
         for (let i = 0; i < arr.length; i++) {
             if (!userData[arr[i]]) {
                 _validInputs[arr[i]] = false;
@@ -112,20 +113,25 @@ const ModalUser = (props) => {
         let check = checkValidInputs();
 
         if(check === true) {
-            let res = await createNewUser({...userData, groupId: userData["group"]});
+            let res = (action === "CREATE") 
+                ? await createNewUser({...userData, groupId: userData["group"]}) 
+                : await updateCurrentUser({...userData, groupId: userData["group"]});
+            
             if(res.data && res.data.EC === 0) {
-                setUserData({...defaultUserData, group: userGroup[0].id});
+                setUserData({...defaultUserData, group: userGroup && userGroup.length > 0 ? userGroup[0].id : ''});
                 
                 onHide();
                 toast.success(res.data.EM);
-                // window.location.reload();
             } else {
                 toast.error(res.data.EM);
+                let _validInputs = _.cloneDeep(validInputsDefault);
+                _validInputs[res.data.DT] = false;
+                setValidInputs(_validInputs);
             }
         }
     }
 
-    const handleCloseModalUser = () => {
+    const handleCloseModalUser = async () => {
         onHide();
         setUserData(defaultUserData);
         setValidInputs(validInputsDefault);
@@ -223,7 +229,7 @@ const ModalUser = (props) => {
                                     onChange={(event) => handleOnchangeInput(event.target.value, 'sex')}
                                     value={userData.sex}
                                 >
-                                    <option value="Male">Male</option>
+                                    <option selected={true} value="Male">Male</option>
                                     <option value="Female">Female</option>
                                     <option value="Other">Other</option>
                                 </select>

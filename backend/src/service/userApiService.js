@@ -213,14 +213,40 @@ const createNewUser = async (data) => {
 
 const updateUser = async (data) => {
     try {
+        // Check valid groupId
+        if (!data.groupId) {
+            return {
+                EM: "Error with emty Group Id",
+                EC: 3,
+                DT: 'group'
+            }
+        }
+
         let user = await db.User.findOne({
-            wher: { id: data.id }
+            where: { id: data.id },
         });
 
         if (user) {
-            user.save();
-        } else {
+            await user.update({
+                userName: data.userName,
+                phone: data.phone,
+                address: data.address,
+                sex: data.sex,
+                groupId: data.groupId
+            });
+            await user.save();
 
+            return {
+                EM: "Update user succeeds",
+                EC: 0,
+                DT: ''
+            }
+        } else {
+            return {
+                EM: "User not found",
+                EC: 2,
+                DT: ''
+            }
         }
     } catch (error) {
         console.log(">>> Error:", error);

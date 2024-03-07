@@ -38,16 +38,6 @@ const Users = (props) => {
         setCurrentPage(+event.selected + 1);
     };
 
-    const handleClose = () => {
-        setDataModalDelete({});
-        setIsShowModalDelete(false);
-    };
-
-    const handleDeleteUser = (user) => {
-        setDataModalDelete(user);
-        setIsShowModalDelete(true);   
-    }
-
     const confirmDeleteUser = async () => {
         let response = await deleteUser(dataModalDelete);
         
@@ -59,6 +49,16 @@ const Users = (props) => {
         } else {
             toast.error(response.data.EM);
         }
+    }
+
+    const handleClose = () => {
+        setDataModalDelete({});
+        setIsShowModalDelete(false);
+    };
+
+    const handleDeleteUser = (user) => {
+        setDataModalDelete(user);
+        setIsShowModalDelete(true);   
     }
 
     const onHideModalUser = async () => {

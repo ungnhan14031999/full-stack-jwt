@@ -118,8 +118,8 @@ const createFunc = async (req, res) => {
 
 const updateFunc = async (req, res) => {
     try {
-        let {email, phone, password, group} = req.body;
-        if (!email || !phone || !password || !group) {
+        let {email, phone, group} = req.body;
+        if (!email || !phone || !group) {
             return res.status(200).json({
                 EM: 'Missing required parameters',
                 EC: -2,
