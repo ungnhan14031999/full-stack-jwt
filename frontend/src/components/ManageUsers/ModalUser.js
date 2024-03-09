@@ -251,7 +251,7 @@ const ModalUser = (props) => {
                                                     key={`group-${index}`} 
                                                     value={item.id}
                                                 >
-                                                    {item.description}
+                                                    {item.name}
                                                 </option>
                                             );
                                         })

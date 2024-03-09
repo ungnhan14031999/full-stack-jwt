@@ -121,7 +121,7 @@ const Users = (props) => {
                                                     <td>{user.email}</td>
                                                     <td>{user.phone}</td>
                                                     <td>{user.sex}</td>
-                                                    <td>{user.Group ? user.Group.description : ''}</td>
+                                                    <td>{user.Group ? user.Group.name : ''}</td>
                                                     <td>
                                                         <button 
                                                             className='btn btn-warning'

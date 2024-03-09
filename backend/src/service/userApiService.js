@@ -1,6 +1,10 @@
+require('dotenv').config();
+
 import db from '../models/index';
 import { Op } from 'sequelize';
 import hashUserPassword from './hashUserPassword';
+import { getGroupWithRoles } from "./JWTService";
+import {createJWT} from "../middleware/JWTAction";
 
 const checkEmailExist = async (email) => {
     let user = await db.User.findOne({
@@ -52,7 +56,8 @@ const registerNewUser = async (rawUserData) => {
     try {
         await db.User.create({
             ...rawUserData,
-            password: hasPassword
+            password: hasPassword,
+            groupId: 4
         });
 
         return {
@@ -83,10 +88,22 @@ const handleUserLogin = async (rawData) => {
             let isCorrectPassword = hashUserPassword.checkUserPassword(rawData.password, user.password);
 
             if (isCorrectPassword === true) {
+                let groupWithRoles = await getGroupWithRoles(user);
+                let payload = {
+                    email: user.email,
+                    groupWithRoles,
+                    expiresIn:  process.env.JWT_EXPIRES_IN
+                }
+
+                let token = createJWT(payload);
+
                 return {
                     EM: "Login success",
                     EC: 0,
-                    DT: user
+                    DT: {
+                        access_token: token,
+                        data: groupWithRoles
+                    }
                 }
             }
         } 

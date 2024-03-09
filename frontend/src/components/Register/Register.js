@@ -87,8 +87,7 @@ const Register = () => {
         let check = isValidInputs();
 
         if(check === true) {
-            let response = await registerNewUser(email, phone, userName, password);
-            let serverData = response.data;
+            let serverData = await registerNewUser(email, phone, userName, password);
             
             isValidServer(serverData);
         }
