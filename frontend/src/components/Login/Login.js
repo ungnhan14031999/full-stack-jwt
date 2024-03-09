@@ -34,8 +34,8 @@ const Login = () => {
 
         let response = await loginUser(valueLogin, password);
 
-        if(response && response.data && response.data.EC === 0) {
-            toast.success(response.data.EM);
+        if(response && response.EC === 0) {
+            toast.success(response.EM);
 
             let data = {
                 isAuthenticated: true,
@@ -46,7 +46,7 @@ const Login = () => {
             history.push('/users');
             window.location.reload();
         } else {
-            toast.error(response.data.EM);
+            toast.error(response.EM);
         }
     }
 
