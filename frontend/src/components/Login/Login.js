@@ -44,7 +44,7 @@ const Login = () => {
             sessionStorage.setItem('account', JSON.stringify(data));
             
             history.push('/users');
-            window.location.reload();
+            // window.location.reload();
         } else {
             toast.error(response.EM);
         }
