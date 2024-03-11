@@ -49,13 +49,12 @@ const Login = () => {
                 token,
                 account: { groupWithRoles, email, userName }
             }
-            
+
             sessionStorage.setItem('account', JSON.stringify(data));
 
             loginContext(data);
             
             history.push('/users');
-            // window.location.reload();
         } else {
             toast.error(response.EM);
         }
@@ -66,14 +65,6 @@ const Login = () => {
             handleLogin();
         }
     }
-
-    useEffect(() => {
-        let sessionAccount = sessionStorage.getItem('account');
-        if(sessionAccount) {
-            history.push('/');
-            window.location.reload();
-        }
-    }, []);
 
     return(
         <div className="section-login container">

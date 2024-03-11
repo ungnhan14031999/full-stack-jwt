@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import './App.scss';
 import { BrowserRouter as Router } from "react-router-dom";
 import { ToastContainer } from 'react-toastify';
@@ -10,15 +9,6 @@ import AppRoutes from './routes/AppRoutes';
 require('dotenv').config();
 
 function App() {
-  const [account, setAccount] = useState('');
-
-  useEffect(() => {
-    let sessionAccount = sessionStorage.getItem('account');
-    if(sessionAccount) {
-      setAccount(JSON.parse(sessionAccount));
-    }
-  }, []);
-
   return (
     <>
       <Router>

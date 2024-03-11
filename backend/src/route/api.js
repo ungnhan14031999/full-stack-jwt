@@ -23,6 +23,7 @@ let initApiRoutes = (app) => {
 
     router.post("/register", userController.handleRegister);
     router.post("/login", userController.handleLogin);
+    router.get("/account", userController.getUserAccount);
 
     router.get("/user/read", userController.readFunc);
     router.post("/user/create", userController.createFunc);

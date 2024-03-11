@@ -59,6 +59,19 @@ const handleLogin = async (req, res) => {
     }
 }   
 
+const getUserAccount = async (req, res) => {
+    return res.status(200).json({
+        EM: 'Account success!',
+        EC: 0,
+        DT: {
+            access_token: req.token,
+            data: req.user.groupWithRoles,
+            email: req.user.email,
+            userName: req.user.userName
+        }
+    });
+}
+
 const readFunc = async (req, res) => {
     try {
         if(req.query.page && req.query.limit) {
@@ -171,6 +184,6 @@ const deleteFunc = async (req, res) => {
 }
 
 module.exports = {
-    handleRegister, handleLogin,
+    handleRegister, handleLogin, getUserAccount,
     readFunc, createFunc, updateFunc, deleteFunc
 }
