@@ -61,7 +61,7 @@ const handleLogin = async (req, res) => {
 
 const getUserAccount = async (req, res) => {
     return res.status(200).json({
-        EM: 'Account success!',
+        EM: 'Account',
         EC: 0,
         DT: {
             access_token: req.token,

@@ -1,8 +1,5 @@
 require("dotenv").config();
-
 import jwt from 'jsonwebtoken';
-
-
 
 const nonSecurePaths = ['/register', '/login'];
 
@@ -42,7 +39,6 @@ const checkUserJWT = (req, res, next) => {
 
         if (decoded) {
             req.user = decoded;
-            req.user = token;
 
             next();
         } else {
@@ -63,7 +59,7 @@ const checkUserJWT = (req, res, next) => {
 
 const checkUserPermission = (req, res, next) => {
     if(nonSecurePaths.includes(req.path) || req.path === '/account') return next();
-    console.log(">>>Check req.user", req.user.email);
+    
     if (req.user) {
         let email = req.user.email;
         let roles = req.user.groupWithRoles;
