@@ -1,9 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
 import {loginUser} from "../../services/userService";
+import { UserContext } from "../../context/UserContext";
 
 const Login = () => {
+    const {loginContext} = useContext(UserContext);
+    
     const [valueLogin, setValueLogin] = useState("");
     const [password, setPassword] = useState("");
     const defaultObjValidInput = {
@@ -37,11 +40,19 @@ const Login = () => {
         if(response && response.EC === 0) {
             toast.success(response.EM);
 
+            let groupWithRoles = response.DT.data;
+            let email = response.DT.email;
+            let userName = response.DT.userName;
+            let token = response.DT.access_token;
             let data = {
                 isAuthenticated: true,
-                token: "fake token"
+                token,
+                account: { groupWithRoles, email, userName }
             }
+            
             sessionStorage.setItem('account', JSON.stringify(data));
+
+            loginContext(data);
             
             history.push('/users');
             // window.location.reload();
