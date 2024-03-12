@@ -1,6 +1,6 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import {  BrowserRouter as Router, Route } from "react-router-dom";
-import { useHistory, Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import { UserContext } from "../context/UserContext";
 
 

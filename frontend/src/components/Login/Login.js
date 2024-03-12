@@ -50,8 +50,7 @@ const Login = () => {
                 account: { groupWithRoles, email, userName }
             }
 
-            sessionStorage.setItem('account', JSON.stringify(data));
-
+            localStorage.setItem('jwt', token);
             loginContext(data);
             
             history.push('/users');
