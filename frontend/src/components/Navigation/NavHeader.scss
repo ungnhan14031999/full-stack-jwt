@@ -1,0 +1,21 @@
+.nav-header {
+
+    a,
+    .nav-link {
+        color: #fff !important;
+        transition: 0.3 ease-in-out;
+
+        &:hover,
+        &.active {
+            color: #0d6efd !important;
+        }
+    }
+
+
+    .dropdown-menu {
+        a {
+            color: #212529 !important;
+        }
+    }
+
+}

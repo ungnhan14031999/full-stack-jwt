@@ -6,7 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import {InfinitySpin} from 'react-loader-spinner';
 
 import { UserContext } from "./context/UserContext";
-import Nav from './components/Navigation/Nav';
+import NavHeader from './components/Navigation/NavHeader';
 import AppRoutes from './routes/AppRoutes';
 
 
@@ -32,7 +32,7 @@ function App() {
           : 
             <>
               <div className='app-header'>
-                <Nav />
+                <NavHeader />
               </div>
               <div className="app-container">
                 <AppRoutes />
