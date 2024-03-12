@@ -8,7 +8,7 @@ const createJWT = (payload) => {
     let token = null;
 
     try {
-        token = jwt.sign(payload, key);
+        token = jwt.sign(payload, key, {expiresIn: process.env.JWT_EXPIRES_IN});
     } catch (error) {
         console.log(error);
     }
@@ -35,7 +35,7 @@ const checkUserJWT = (req, res, next) => {
     let cookies = req.cookies;
     if(cookies && cookies.jwt) {
         let token = cookies.jwt;
-        let decoded = verifyToken(token);
+        let decoded =  verifyToken(token);
 
         if (decoded) {
             req.user = decoded;
@@ -62,7 +62,7 @@ const checkUserPermission = (req, res, next) => {
     
     if (req.user) {
         let email = req.user.email;
-        let roles = req.user.groupWithRoles;
+        let roles = req.user.groupWithRoles.Roles;
         let currentUrl = req.path;
 
         if(!roles || roles.length === 0) {

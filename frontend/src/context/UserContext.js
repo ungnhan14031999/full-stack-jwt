@@ -3,15 +3,17 @@ import {getUserAccount} from '../services/userService';
 
 const UserContext = React.createContext({name: '', auth: false});
 
-const UserProvider = ({children}) => {
-    const [user, setUser] = useState({
-            isAuthenticated: false, 
-            token: "",
-            account: {}
-        });
+const UserProvider = ({children}) => {  
+    const userDefault = {
+        isLoading: true,
+        isAuthenticated: false, 
+        token: "",
+        account: {},
+    }
+    const [user, setUser] = useState(userDefault);
 
-    const loginContext = (nameData) => {
-        setUser(nameData);
+    const loginContext = (userData) => {
+        setUser({...userData, isLoading: false});
     }
 
     const logout = () => {
@@ -28,18 +30,24 @@ const UserProvider = ({children}) => {
             let email = response.DT.email;
             let userName = response.DT.userName;
             let token = response.DT.access_token;
+
             let data = {
+                isLoading: false,
                 isAuthenticated: true,
                 token,
                 account: { groupWithRoles, email, userName }
             };
 
             setUser(data);
+        } else {
+            setUser({...userDefault, isLoading: false});
         }
     }
 
     useEffect(() => {
-        fetchUser();
+        if(window.location.pathname !== '/' || window.location.pathname !== '/login') {
+            fetchUser();
+        }
     }, []);
 
     return (

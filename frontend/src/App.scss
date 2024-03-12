@@ -3,3 +3,15 @@ body {
     padding: 0;
     box-sizing: border-box;
 }
+
+.loading-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    h4 {
+        color: #1877f2;
+    }
+}
