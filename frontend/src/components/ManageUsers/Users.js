@@ -85,7 +85,9 @@ const Users = (props) => {
                     <div className='users-header'>
                         <h3 className='users-header__title'>Table Users</h3>
                         <div className='users-header__action mb-2'>
-                            <button className='action-refesh btn btn-success'>Refesh</button>
+                            <button 
+                                className='action-refesh btn btn-success'
+                            >Refesh</button>
                             <button 
                                 className='action-add btn btn-primary ms-2'
                                 onClick={() => handleCreatUser()}
