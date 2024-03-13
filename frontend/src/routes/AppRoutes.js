@@ -1,9 +1,9 @@
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-
+import { BrowserRouter as Route, Switch } from "react-router-dom";
 import PrivateRoutes from "./PrivateRoutes";
 import Login from '../components/Login/Login';
 import Register from '../components/Register/Register';
 import Users from '../components/ManageUsers/Users';
+import Role from '../components/Roles/Role';
 import Home from "../components/Home/Home";
 
 const AppRoutes = () => {
@@ -25,6 +25,11 @@ const AppRoutes = () => {
                     path="/projects"
                     component={Projects}
                 />
+                <PrivateRoutes 
+                    path="/roles"
+                    component={Role}
+                />
+
 
 
                 <Route path="/login">

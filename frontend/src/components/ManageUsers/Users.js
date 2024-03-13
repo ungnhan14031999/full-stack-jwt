@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import { toast } from 'react-toastify';
 import {fetchAllUser, deleteUser} from '../../services/userService';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus, faArrowsRotate, faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 import ModalDelete from './ModalDelete';
 import ModalUser from './ModalUser';
@@ -87,12 +89,16 @@ const Users = (props) => {
                         <div className='users-header__action mb-2'>
                             <button 
                                 className='action-refesh btn btn-success'
-                            >Refesh</button>
+                            >
+                                <FontAwesomeIcon icon={faArrowsRotate} />
+                                <span className="ps-2">Refesh</span>
+                            </button>
                             <button 
                                 className='action-add btn btn-primary ms-2'
                                 onClick={() => handleCreatUser()}
                             >
-                                Add new user
+                                <FontAwesomeIcon icon={faPlus} />
+                                <span className="ps-2">Add new user</span>
                             </button>
                         </div>
                     </div>
@@ -128,14 +134,14 @@ const Users = (props) => {
                                                         <button 
                                                             className='btn btn-warning'
                                                             onClick={() => handleEditUser(user)}
-                                                        >
-                                                            Edit
+                                                        >   
+                                                            <FontAwesomeIcon icon={faPenToSquare} />
                                                         </button>
                                                         <button 
                                                             className='btn btn-danger ms-2'
                                                             onClick={() => handleDeleteUser(user)}
                                                         >
-                                                            Delete
+                                                            <FontAwesomeIcon icon={faTrash} />
                                                         </button>
                                                     </td>
                                                 </tr>
