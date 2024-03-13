@@ -3,25 +3,28 @@ import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useEffect, useState } from 'react';
 import _ from 'lodash';
 import { v4 as uuidv4} from 'uuid';
+import { toast } from 'react-toastify';
+import {createRoles} from '../../services/roleService';
 
 const Role = () => {
-    const [listChilds, setListChilds] = useState({
-        item1: { url: '', description: '' }
-    });
+    const dataChildDefaul = { url: '', description: '', isValidUrl: true };
+    const [listChilds, setListChilds] = useState({item1: dataChildDefaul});
 
     const handleOnchangeInput = (name, value, key) => {
         let _listChilds = _.cloneDeep(listChilds);
 
         _listChilds[key][name] = value;
+
+        if(value && name === 'url') {
+            _listChilds[key]['isValidUrl'] = true;
+        }
+
         setListChilds(_listChilds);
     }
 
     const handleAddNewInput = () => {
         let _listChilds = _.cloneDeep(listChilds);
-        _listChilds[`item-${uuidv4()}`] = {
-            url: '',
-            description: ''
-        };
+        _listChilds[`item-${uuidv4()}`] = dataChildDefaul;
 
         setListChilds(_listChilds);
     }
@@ -32,6 +35,41 @@ const Role = () => {
         delete _listChilds[key];
 
         setListChilds(_listChilds);
+    }
+
+    const buildDataToPersist = () => {
+        let _listChilds = _.cloneDeep(listChilds);
+        let result = [];
+
+        Object.entries(_listChilds).map(([ket, child], index) => {
+            result.push({
+                url: child.url,
+                description: child.description
+            });
+        });
+        return result;
+    }
+
+    const handleSave = async () => {
+        let invalidObj = Object.entries(listChilds).find(([key, child], index) => {
+            return child && !child.url;
+        });
+
+        if(!invalidObj) {
+            let data = buildDataToPersist();
+            let res = await createRoles(data);
+            if(res && res.EC === +0) {
+                toast.success(res.EM);
+            }
+        } else {
+            let _listChilds = _.cloneDeep(listChilds);
+            const key = invalidObj[0];
+
+            _listChilds[key]['isValidUrl'] = false;
+            setListChilds(_listChilds);
+
+            toast.error("Input URL must not be emty...");
+        }
     }
 
     return (
@@ -56,7 +94,7 @@ const Role = () => {
                                                 <label>Url:</label>
                                                 <input 
                                                     type="text" 
-                                                    className="form-control" 
+                                                    className={child.isValidUrl ? "form-control" : "form-control is-invalid"}
                                                     value={child.url} 
                                                     onChange={(e) => handleOnchangeInput('url', e.target.value, key)}
                                                 />
@@ -94,7 +132,10 @@ const Role = () => {
                         }
                         
                         <div className='role-content__add mt-4'>
-                            <button className="btn btn-primary">
+                            <button 
+                                className="btn btn-primary"
+                                onClick={() => handleSave()}
+                            >
                                 <FontAwesomeIcon icon={faPlus} />
                                 <span className='ps-2'>Add Role</span>
                             </button>
