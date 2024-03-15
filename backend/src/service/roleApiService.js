@@ -1,5 +1,35 @@
 import db from "../models";
 
+const getAllRole = async () => {
+    try {
+        let roles = await db.Role.findAll({
+            raw: true
+        });
+
+        if(roles && roles.length > 0) {
+            return {
+                EM: `Get role data success`,
+                EC: 0,
+                DT: roles
+            };
+        } else {
+            return {
+                EM: `Get role data success`,
+                EC: 0,
+                DT: []
+            };
+        }
+
+    } catch (error) {
+        console.log('Error', error);
+        return {
+            EM: 'Error from service',
+            EC: -2,
+            DT: ''
+        };
+    }
+}
+
 const createNewRoles = async (roles) => {
     try {
         let currentRoles = await db.Role.findAll({
@@ -36,5 +66,5 @@ const createNewRoles = async (roles) => {
 }
 
 module.exports = {
-    createNewRoles,
+    getAllRole, createNewRoles,
 }

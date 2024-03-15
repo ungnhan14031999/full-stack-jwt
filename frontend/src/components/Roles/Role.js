@@ -4,12 +4,14 @@ import { useEffect, useState } from 'react';
 import _ from 'lodash';
 import { v4 as uuidv4} from 'uuid';
 import { toast } from 'react-toastify';
-import {createRoles} from '../../services/roleService';
+import { createRoles } from '../../services/roleService';
+
+import TableRole from './TableRole';
 
 const Role = () => {
     const dataChildDefaul = { url: '', description: '', isValidUrl: true };
     const [listChilds, setListChilds] = useState({item1: dataChildDefaul});
-
+    
     const handleOnchangeInput = (name, value, key) => {
         let _listChilds = _.cloneDeep(listChilds);
 
@@ -75,12 +77,12 @@ const Role = () => {
     return (
         <div className="section-role">
             <div className="container">
-                <div className="mt-3">
-                    <div className="role-title">
+                <div className="role-add mt-3">
+                    <div className="role-add__title">
                         <h4>Add a new role....</h4>
                     </div>
 
-                    <div className="role-content">
+                    <div className="role-add__content">
                         {
                             Object.entries(listChilds).map(([key, child], index) => {
                                 return (
@@ -141,6 +143,11 @@ const Role = () => {
                             </button>
                         </div>
                     </div>
+                    
+                </div>
+
+                <div className='role-table mt-5'>
+                    <TableRole />
                 </div>
             </div>
         </div>
