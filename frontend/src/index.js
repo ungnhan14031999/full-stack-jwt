@@ -4,8 +4,6 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {UserProvider} from './context/UserContext';
-import '@fortawesome/fontawesome-free/css/all.min.css';
-import { Audio } from 'react-loader-spinner';
 
 ReactDOM.render(
   <React.StrictMode>

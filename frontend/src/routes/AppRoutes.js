@@ -1,10 +1,11 @@
-import { BrowserRouter as Route, Switch } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import PrivateRoutes from "./PrivateRoutes";
 import Login from '../components/Login/Login';
 import Register from '../components/Register/Register';
 import Users from '../components/ManageUsers/Users';
 import Role from '../components/Roles/Role';
 import Home from "../components/Home/Home";
+import About from "../components/About/About";
 
 const AppRoutes = () => {
 
@@ -29,12 +30,15 @@ const AppRoutes = () => {
                     path="/roles"
                     component={Role}
                 />
+                <PrivateRoutes 
+                    path="/about"
+                    component={About}
+                />
 
-
-
+                
                 <Route path="/login">
                     <Login />
-                </Route> 
+                </Route>
                 <Route path="/register">
                     <Register />
                 </Route>

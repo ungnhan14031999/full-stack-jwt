@@ -9,7 +9,6 @@ import { UserContext } from "./context/UserContext";
 import NavHeader from './components/Navigation/NavHeader';
 import AppRoutes from './routes/AppRoutes';
 
-
 require('dotenv').config();
 
 function App() {
@@ -30,14 +29,14 @@ function App() {
               <h4>Loading...</h4>
             </div>
           : 
-            <>
+            <div className='app-container'>
               <div className='app-header'>
                 <NavHeader />
               </div>
-              <div className="app-container">
+              <div className="app-content">
                 <AppRoutes />
               </div>
-            </>
+            </div>
         }
         
 

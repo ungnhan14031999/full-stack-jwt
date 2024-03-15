@@ -5,8 +5,7 @@ import {loginUser} from "../../services/userService";
 import { UserContext } from "../../context/UserContext";
 
 const Login = () => {
-    const {loginContext} = useContext(UserContext);
-    
+    const { loginContext } = useContext(UserContext);
     const [valueLogin, setValueLogin] = useState("");
     const [password, setPassword] = useState("");
     const defaultObjValidInput = {
@@ -23,7 +22,6 @@ const Login = () => {
 
     const handleLogin = async () => {
         setObjValidInput(defaultObjValidInput)
-
         if(!valueLogin) {
             setObjValidInput({...defaultObjValidInput, isValidValueLogin: false});
             toast.error("Please enter your email or phone number");
@@ -36,10 +34,9 @@ const Login = () => {
         }
 
         let response = await loginUser(valueLogin, password);
-
         if(response && response.EC === 0) {
             toast.success(response.EM);
-
+            
             let groupWithRoles = response.DT.data;
             let email = response.DT.email;
             let userName = response.DT.userName;
@@ -49,10 +46,10 @@ const Login = () => {
                 token,
                 account: { groupWithRoles, email, userName }
             }
-
+            
             localStorage.setItem('jwt', token);
             loginContext(data);
-            
+
             history.push('/users');
         } else {
             toast.error(response.EM);
@@ -92,7 +89,7 @@ const Login = () => {
                                 type="password" 
                                 className={objValidInput.isValidValuePassword ? "form-control" : "form-control is-invalid"}  
                                 id="inputPassword" 
-                                placeholder="Password" 
+                                placeholder="Password"
                                 value={password}
                                 onChange={(e) => {setPassword(e.target.value)}}
                                 onKeyPress={(e) => handlePressEnter(e)}
@@ -100,7 +97,6 @@ const Login = () => {
                         </div>
                         <div className="mb-3">
                             <button 
-                                type="submit" 
                                 className="btn btn-primary w-100"
                                 onClick={() => handleLogin()}
                             >Login</button>

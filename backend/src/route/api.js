@@ -28,10 +28,10 @@ let initApiRoutes = (app) => {
     router.get("/account", userController.getUserAccount);
 
     // User routes
-    router.get("/user/read", roleController.readFunc);
-    router.post("/user/create", roleController.createFunc);
-    router.put("/user/update", roleController.updateFunc);
-    router.delete("/user/delete", roleController.deleteFunc);
+    router.get("/user/read", userController.readFunc);
+    router.post("/user/create", userController.createFunc);
+    router.put("/user/update", userController.updateFunc);
+    router.delete("/user/delete", userController.deleteFunc);
 
     // Roles routes
     router.get("/role/read", roleController.readFunc);
