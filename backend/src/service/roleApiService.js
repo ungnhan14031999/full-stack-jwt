@@ -1,5 +1,38 @@
 import db from "../models";
 
+const getRolesWithPagination = async (page, limit) => {
+    try {
+        let offset = (page - 1) * limit;
+
+        const { count, rows } = await db.Role.findAndCountAll({
+            offset,
+            limit,
+            order: [['id', 'DESC']],
+            raw: true,
+        });
+
+        let totalPage = Math.ceil(count / limit);
+        let data = {
+            totalRows: count,
+            totalPage: totalPage,
+            roles: rows,
+        }
+
+        return {
+            EM: "Get role success",
+            EC: 0,
+            DT: data
+        }
+    } catch (error) {
+        console.log(">>> Error:", error);
+        return {
+            EM: "Something wrongs with services",
+            EC: -1,
+            DT: []
+        }
+    }
+}
+
 const getAllRole = async () => {
     try {
         let roles = await db.Role.findAll({
@@ -66,5 +99,6 @@ const createNewRoles = async (roles) => {
 }
 
 module.exports = {
-    getAllRole, createNewRoles,
+    getAllRole, createNewRoles, 
+    getRolesWithPagination,
 }

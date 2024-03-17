@@ -3,21 +3,34 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useEffect, useState } from 'react';
 import { getAllRole } from '../../services/roleService';
+import ReactPaginate from 'react-paginate';
 
 const TableRole = (porps) => {
     const [listRole, setListRole] = useState([]);
+    const [totalPages, setTotalPages] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [currentLimit, setCurrentLimit] = useState(5);
 
     const fetchDataRoles = async () => {
-        let response = await getAllRole();
+        let response = await getAllRole(currentPage, currentLimit);
 
         if(response && +response.EC === 0) {
-            setListRole(response.DT);
+            setListRole(response.DT.roles);
+            setTotalPages(response.DT.totalPage);
         }
+    }
+
+    const handleDeleteRole = (role) => {
+        console.log(">>>Check delete role", role);
+    }
+
+    const handlePageClick = (event) => {
+        setCurrentPage(+event.selected + 1);
     }
 
     useEffect( async () => {
         await fetchDataRoles();
-    }, []);
+    }, [currentPage]);
 
     return (
         <>
@@ -26,7 +39,7 @@ const TableRole = (porps) => {
             </div>
 
             <div className='role-table__content'>
-                <table class="table table-striped table-bordered table-hover">
+                <table className="table table-striped table-bordered table-hover">
                     <thead>
                         <tr>
                             <th scope="col">#</th>
@@ -38,16 +51,16 @@ const TableRole = (porps) => {
                     <tbody>
                         {listRole && listRole.length > 0 ?
                             <> 
-                                {listRole.map((item, index) => {
+                                {listRole.map((role, index) => {
                                     return(
-                                        <tr>
+                                        <tr key={`row-${index}`}>
                                             <th scope="row">{index + 1}</th>
-                                            <td>{item.url}</td>
-                                            <td>{item.description}</td>
+                                            <td>{role.url}</td>
+                                            <td>{role.description}</td>
                                             <td>
                                                 <button 
                                                     className='btn btn-danger'
-                                                    // onClick={() => handleDeleteUser(user)}
+                                                    onClick={() => handleDeleteRole(role)}
                                                 >
                                                     <FontAwesomeIcon icon={faTrash} />
                                                 </button>
@@ -67,6 +80,33 @@ const TableRole = (porps) => {
                         
                     </tbody>
                 </table>
+            </div>
+
+            <div className='role-table__pagination'>
+                { totalPages > 0 &&
+                    <div className='user-footer'>
+                        <ReactPaginate
+                            nextLabel="next >"
+                            onPageChange={handlePageClick}
+                            pageRangeDisplayed={3}
+                            marginPagesDisplayed={2}
+                            pageCount={totalPages}
+                            previousLabel="< previous"
+                            pageClassName="page-item"
+                            pageLinkClassName="page-link"
+                            previousClassName="page-item"
+                            previousLinkClassName="page-link"
+                            nextClassName="page-item"
+                            nextLinkClassName="page-link"
+                            breakLabel="..."
+                            breakClassName="page-item"
+                            breakLinkClassName="page-link"
+                            containerClassName="pagination"
+                            activeClassName="active"
+                            renderOnZeroPageCount={null}
+                        />
+                    </div>
+                }
             </div>
         </> 
     );
