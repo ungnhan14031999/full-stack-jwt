@@ -39,20 +39,11 @@ const getAllRole = async () => {
             raw: true
         });
 
-        if(roles && roles.length > 0) {
-            return {
-                EM: `Get role data success`,
-                EC: 0,
-                DT: roles
-            };
-        } else {
-            return {
-                EM: `Get role data success`,
-                EC: 0,
-                DT: []
-            };
-        }
-
+        return {
+            EM: `Get role data success`,
+            EC: 0,
+            DT: roles
+        };
     } catch (error) {
         console.log('Error', error);
         return {

@@ -6,6 +6,7 @@ import Users from '../components/ManageUsers/Users';
 import Role from '../components/Roles/Role';
 import Home from "../components/Home/Home";
 import About from "../components/About/About";
+import GroupRole from "../components/GroupRole/GroupRole";
 
 const AppRoutes = () => {
 
@@ -29,6 +30,10 @@ const AppRoutes = () => {
                 <PrivateRoutes 
                     path="/roles"
                     component={Role}
+                />
+                <PrivateRoutes 
+                    path="/group-role"
+                    component={GroupRole}
                 />
                 <PrivateRoutes 
                     path="/about"

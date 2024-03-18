@@ -297,8 +297,6 @@ const deleteUser = async (id) => {
                 DT: []
             }
         }
-
-        
     } catch (error) {
         console.log(">>> Error:", error);
         return {

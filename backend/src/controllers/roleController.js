@@ -6,7 +6,7 @@ const readFunc = async (req, res) => {
         let page = req.query.page;
         let limit = req.query.limit;
 
-        if( page && limit ) {
+        if( page > 0 && limit > 0 ) {
             let data = await roleApiService.getRolesWithPagination(+page, +limit);
 
             return res.status(200).json({

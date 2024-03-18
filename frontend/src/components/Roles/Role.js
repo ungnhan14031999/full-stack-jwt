@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { useEffect, useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import _ from 'lodash';
 import { v4 as uuidv4} from 'uuid';
 import { toast } from 'react-toastify';
