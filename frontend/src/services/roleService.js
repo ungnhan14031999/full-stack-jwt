@@ -1,4 +1,3 @@
-// import axios from "axios";
 import axios from "../config/axios";
 
 const getAllRole = (page, limit) => {
@@ -9,6 +8,10 @@ const createRoles = (roles) => {
     return axios.post('/api/v1/role/create', [...roles]);
 }
 
+const deleteRole = (role) => {
+    return axios.delete('/api/v1/role/delete', {data: {id: role.id}});
+} 
+
 export {
-    getAllRole, createRoles,
+    getAllRole, createRoles, deleteRole,
 }

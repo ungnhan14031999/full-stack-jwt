@@ -16,6 +16,7 @@ const readFunc = async (req, res) => {
             });
         } else {
             let data = await roleApiService.getAllRole();
+
             return res.status(200).json({
                 EM: data.EM,
                 EC: data.EC,
@@ -56,7 +57,22 @@ const updateFunc = async (req, res) => {
 }
 
 const deleteFunc = async (req, res) => {
-    
+    try {
+        let data = await roleApiService.deleteRole(req.body.id);
+        
+        return res.status(200).json({
+            EM: data.EM,
+            EC: data.EC,
+            DT: data.DT
+        })
+    } catch (error) {
+        console.log('Error', error);
+        return res.status(500).json({
+            EM: 'Error from server',
+            EC: -1,
+            DT: ''
+        });
+    }
 }
 
 module.exports = {

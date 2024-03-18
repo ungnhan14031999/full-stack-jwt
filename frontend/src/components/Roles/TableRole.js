@@ -2,14 +2,21 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useEffect, useState } from 'react';
-import { getAllRole } from '../../services/roleService';
+import { getAllRole, deleteRole } from '../../services/roleService';
 import ReactPaginate from 'react-paginate';
+import { toast } from 'react-toastify';
+
+import ModalDelete from './ModalDelete';
 
 const TableRole = (porps) => {
     const [listRole, setListRole] = useState([]);
     const [totalPages, setTotalPages] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
     const [currentLimit, setCurrentLimit] = useState(5);
+
+    // Modal Delete
+    const [isShowModalDelete, setIsShowModalDelete] = useState(false);
+    const [dataModalDelete, setDataModalDelete] = useState({});
 
     const fetchDataRoles = async () => {
         let response = await getAllRole(currentPage, currentLimit);
@@ -20,16 +27,34 @@ const TableRole = (porps) => {
         }
     }
 
-    const handleDeleteRole = (role) => {
-        console.log(">>>Check delete role", role);
-    }
-
     const handlePageClick = (event) => {
         setCurrentPage(+event.selected + 1);
     }
 
+    const confirmDeleteRole = async () => {
+        let response = await deleteRole(dataModalDelete);
+
+        if(response && response.EC === 0) {
+            fetchDataRoles();
+            toast.success(response.EM);
+            setIsShowModalDelete(false);
+        } else {
+            toast.error("Delete role failt");
+        }
+    }
+
+    const handleDeleteRole = (role) => {
+        setDataModalDelete(role);
+        setIsShowModalDelete(true);   
+    }
+
+    const handleClose = () => {
+        setDataModalDelete({});
+        setIsShowModalDelete(false);
+    };
+
     useEffect( async () => {
-        await fetchDataRoles();
+        fetchDataRoles();
     }, [currentPage]);
 
     return (
@@ -108,6 +133,13 @@ const TableRole = (porps) => {
                     </div>
                 }
             </div>
+
+            <ModalDelete 
+                show={isShowModalDelete}
+                handleClose={handleClose}
+                confirmDeleteRole={confirmDeleteRole}
+                dataModalDelete={dataModalDelete}
+            />
         </> 
     );
 };

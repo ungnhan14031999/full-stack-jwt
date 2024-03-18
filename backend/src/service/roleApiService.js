@@ -98,7 +98,38 @@ const createNewRoles = async (roles) => {
     }
 }
 
+const deleteRole = async (id) => {
+    try {
+        let role = await db.Role.findOne({
+            where: { id: id }
+        });
+
+        if (role) {
+            await role.destroy();
+
+            return {
+                EM: "Delete role success!",
+                EC: 0,
+                DT: [],
+            }
+        } else {
+            return {
+                EM: "Role not exist",
+                EC: -2,
+                DT: []
+            }
+        }
+    } catch (error) {
+        console.log('Error', error);
+        return {
+            EM: 'Error from service',
+            EC: -1,
+            DT: ''
+        };
+    }
+}
+
 module.exports = {
-    getAllRole, createNewRoles, 
+    getAllRole, createNewRoles, deleteRole,
     getRolesWithPagination,
 }
