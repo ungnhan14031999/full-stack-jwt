@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import _ from 'lodash';
 import { v4 as uuidv4} from 'uuid';
 import { toast } from 'react-toastify';
@@ -11,6 +11,8 @@ import TableRole from './TableRole';
 const Role = () => {
     const dataChildDefaul = { url: '', description: '', isValidUrl: true };
     const [listChilds, setListChilds] = useState({item1: dataChildDefaul});
+
+    const childRef = useRef();
     
     const handleOnchangeInput = (name, value, key) => {
         let _listChilds = _.cloneDeep(listChilds);
@@ -60,8 +62,10 @@ const Role = () => {
         if(!invalidObj) {
             let data = buildDataToPersist();
             let res = await createRoles(data);
+
             if(res && res.EC === +0) {
                 toast.success(res.EM);
+                childRef.current.fetchListRoles();
             }
         } else {
             let _listChilds = _.cloneDeep(listChilds);
@@ -147,7 +151,7 @@ const Role = () => {
                 </div>
 
                 <div className='role-table mt-5'>
-                    <TableRole />
+                    <TableRole ref={childRef} />
                 </div>
             </div>
         </div>

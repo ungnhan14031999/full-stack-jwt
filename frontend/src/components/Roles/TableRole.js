@@ -1,14 +1,14 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, forwardRef, useImperativeHandle } from 'react';
 import { getAllRole, deleteRole } from '../../services/roleService';
 import ReactPaginate from 'react-paginate';
 import { toast } from 'react-toastify';
 
 import ModalDelete from './ModalDelete';
 
-const TableRole = (porps) => {
+const TableRole = forwardRef((porps, ref) => {
     const [listRole, setListRole] = useState([]);
     const [totalPages, setTotalPages] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
@@ -17,6 +17,17 @@ const TableRole = (porps) => {
     // Modal Delete
     const [isShowModalDelete, setIsShowModalDelete] = useState(false);
     const [dataModalDelete, setDataModalDelete] = useState({});
+
+    useImperativeHandle(ref, () => ({
+        fetchListRoles() {
+            fetchDataRoles();
+        }
+    }));
+
+    useEffect( async () => {
+        fetchDataRoles();
+    }, [currentPage]);
+
 
     const fetchDataRoles = async () => {
         let response = await getAllRole(currentPage, currentLimit);
@@ -52,10 +63,6 @@ const TableRole = (porps) => {
         setDataModalDelete({});
         setIsShowModalDelete(false);
     };
-
-    useEffect( async () => {
-        fetchDataRoles();
-    }, [currentPage]);
 
     return (
         <>
@@ -142,6 +149,6 @@ const TableRole = (porps) => {
             />
         </> 
     );
-};
+});
 
 export default TableRole;
