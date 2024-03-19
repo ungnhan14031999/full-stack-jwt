@@ -139,7 +139,6 @@ const getRoleByGroup = async (id) => {
                 through: { attributes: [] }
             }
         });
-        console.log(">>>Check roles", roles);
 
         return {
             EM: "Get roles by group success",
