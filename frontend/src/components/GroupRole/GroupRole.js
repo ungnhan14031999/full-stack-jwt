@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import _ from 'lodash';
 
 import { fetchGroup } from '../../services/userService';
 import { getAllRole, fetchRolesByGroup } from '../../services/roleService';
@@ -31,20 +32,49 @@ const GroupRole = () => {
         }
     }
 
-    const getRolesByGroup = async (groupId) => {
-        let data = await fetchRolesByGroup(groupId);
-        
-        if(data && data +data.EC === 0) {
-
-        }
-    }
-
     const handleOnchangeGroup = async (value) => {
         setSelectGroup(value);
         
         if(value) {
-            await getRolesByGroup(value);
+            let data = await fetchRolesByGroup(value);
+
+            if(data && +data.EC === 0) {
+                let result = buildDataRoleByGroup(data.DT.Roles, listRole);
+                setAssignRolesByGroup(result);
+            }
         }
+    }
+
+    const buildDataRoleByGroup = (groupRoles, allRoles) => {
+        let result = [];
+
+        if(allRoles && allRoles.length > 0) {
+            allRoles.map(role => {
+                let object = {}
+                object.url = role.url;
+                object.id = role.id;
+                object.description = role.description;
+                object.isAssigned = false;
+
+                if(groupRoles && groupRoles.length > 0) {
+                    object.isAssigned = groupRoles.some(item => item.url === object.url);
+                }
+
+                result.push(object);
+            });
+        }
+        return result;
+    }
+
+    const handleSelectRole = (value) => {
+        const _assignRolesByGroup = _.cloneDeep(assignRolesByGroup);
+        let foundIndex = _assignRolesByGroup.findIndex(item => item.id === +value);
+        
+        if(foundIndex > -1) {
+            _assignRolesByGroup[foundIndex].isAssigned = !_assignRolesByGroup[foundIndex].isAssigned;
+        }
+
+        setAssignRolesByGroup(_assignRolesByGroup);
     }
 
     return(
@@ -83,12 +113,19 @@ const GroupRole = () => {
                             <h5>Assign Roles:</h5>
                             <div className="row">
                                 {
-                                    listRole && listRole.length > 0 
-                                    && listRole.map((role, index) => {
+                                    assignRolesByGroup && assignRolesByGroup.length > 0 
+                                    && assignRolesByGroup.map((role, index) => {
                                         return (
                                             <div className="col-6 col-lg-3">
                                                 <div class="form-check" key={`list-role-${index}`}>
-                                                    <input class="form-check-input" type="checkbox" value="" id={`list-role-${index}`} />
+                                                    <input 
+                                                        class="form-check-input" 
+                                                        type="checkbox" 
+                                                        value={role.id}
+                                                        id={`list-role-${index}`} 
+                                                        checked={role.isAssigned}
+                                                        onChange={(event) => handleSelectRole(event.target.value)}
+                                                    />
                                                     <label class="form-check-label" for={`list-role-${index}`}>
                                                         {role.url}
                                                     </label>
@@ -97,6 +134,9 @@ const GroupRole = () => {
                                         )
                                     })
                                 }
+                                <div class="mt-3">
+                                    <button className="btn btn-warning">Save</button>
+                                </div>
                             </div>
                         </div>
                     }
