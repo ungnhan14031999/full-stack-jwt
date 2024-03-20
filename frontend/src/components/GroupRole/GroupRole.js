@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import _ from 'lodash';
 
 import { fetchGroup } from '../../services/userService';
-import { getAllRole, fetchRolesByGroup } from '../../services/roleService';
+import { getAllRole, fetchRolesByGroup, assignRolesToGroup } from '../../services/roleService';
 
 const GroupRole = () => {
     const [userGroup, setUserGroup] = useState([]);
@@ -77,6 +77,33 @@ const GroupRole = () => {
         setAssignRolesByGroup(_assignRolesByGroup);
     }
 
+    const buildDataToSave = () => {
+        let result = {}
+
+        const _assignRolesByGroup = _.cloneDeep(assignRolesByGroup);
+
+        result.groupId = selectGroup;
+
+        let groupRoles = _assignRolesByGroup.filter(item => item.isAssigned === true);
+        let finalGroupRoles = groupRoles.map(item => {
+            let data = { groupId: +selectGroup, roleId: +item.id };
+            return data;
+        });
+
+        result.groupRoles = finalGroupRoles;
+
+        return result;
+    }
+
+    const handleSave = async () => {
+        let data = buildDataToSave();
+
+        let res = await assignRolesToGroup(data);
+        if(res && res.EC === 0) {
+            toast.success(res.EM);
+        }
+    }
+
     return(
         <div className="section-group-role">
             <div className="container">
@@ -117,16 +144,16 @@ const GroupRole = () => {
                                     && assignRolesByGroup.map((role, index) => {
                                         return (
                                             <div className="col-6 col-lg-3">
-                                                <div class="form-check" key={`list-role-${index}`}>
+                                                <div className="form-check" key={`list-role-${index}`}>
                                                     <input 
-                                                        class="form-check-input" 
+                                                        className="form-check-input" 
                                                         type="checkbox" 
                                                         value={role.id}
                                                         id={`list-role-${index}`} 
                                                         checked={role.isAssigned}
                                                         onChange={(event) => handleSelectRole(event.target.value)}
                                                     />
-                                                    <label class="form-check-label" for={`list-role-${index}`}>
+                                                    <label className="form-check-label" for={`list-role-${index}`}>
                                                         {role.url}
                                                     </label>
                                                 </div>
@@ -134,8 +161,11 @@ const GroupRole = () => {
                                         )
                                     })
                                 }
-                                <div class="mt-3">
-                                    <button className="btn btn-warning">Save</button>
+                                <div className="mt-3">
+                                    <button 
+                                        className="btn btn-warning"
+                                        onClick={() => handleSave()}
+                                    >Save</button>
                                 </div>
                             </div>
                         </div>
